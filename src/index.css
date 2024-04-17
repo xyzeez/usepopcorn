@@ -145,7 +145,7 @@ body {
   height: calc(100% - 9rem);
 }
 
-.list li {
+.list li > div {
   position: relative;
   display: grid;
   grid-template-columns: 4rem 1fr;
@@ -161,6 +161,7 @@ body {
 .list.list-movies li {
   cursor: pointer;
   transition: all 0.3s;
+  border: 1px solid blue;
 }
 
 .list.list-movies li:hover {
@@ -169,16 +170,26 @@ body {
 
 .list img {
   width: 100%;
-  grid-row: 1 / -1;
+  grid-column: 1 / 2;
+  grid-row: 1/2;
 }
 
 .list h3 {
   font-size: 1.8rem;
 }
 
-.list div {
+.list .inner {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
+  gap: 1.2rem;
+  grid-column: 2/3;
+  grid-row: 1/2;
+}
+
+.list .inner div {
+  display: flex;
+  flex-direction: row;
   gap: 2.4rem;
 }
 
