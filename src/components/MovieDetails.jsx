@@ -88,6 +88,14 @@ const MoviesDetails = ({
     fetchData();
   }, [movieId]);
 
+  useEffect(() => {
+    document.title = `Movie | ${details && details.Title}`;
+
+    return () => {
+      document.title = 'usePopcorn';
+    };
+  }, [details]);
+
   return (
     <div className="details">
       {isLoading ? (
