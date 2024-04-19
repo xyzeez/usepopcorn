@@ -1,5 +1,15 @@
 import { useEffect, useState } from 'react';
 
+// Components
+import Nav from './components/Nav';
+import Logo from './components/Logo';
+import SearchField from './components/SearchField';
+import Box from './components/Box';
+import MoviesList from './components/MovieList';
+import WatchedSummary from './components/WatchedSummary';
+import Loader from './components/Loader';
+import ErrorMessage from './components/ErrorMessage';
+
 const tempMovieData = [
   {
     imdbID: 'tt1375666',
@@ -47,172 +57,6 @@ const tempWatchedData = [
   },
 ];
 
-const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
-
-// Components
-const Logo = () => {
-  return (
-    <div className="logo">
-      <span role="img">🍿</span>
-      <h1>usePopcorn</h1>
-    </div>
-  );
-};
-
-const SearchField = ({ searchHandler }) => {
-  return (
-    <input
-      className="search"
-      type="text"
-      placeholder="Search movies..."
-      onChange={(e) => searchHandler(e.target.value)}
-    />
-  );
-};
-
-const Nav = ({ movies, children }) => {
-  return (
-    <nav className="nav-bar">
-      {children}
-      <p className="num-results">
-        Found <strong>{movies.length}</strong> results
-      </p>
-    </nav>
-  );
-};
-
-const Box = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(true);
-
-  return (
-    <div className="box">
-      <button className="btn-toggle" onClick={() => setIsOpen((open) => !open)}>
-        {isOpen ? '–' : '+'}
-      </button>
-      {isOpen && children}
-    </div>
-  );
-};
-
-const MoviesList = ({ data, forWatched }) => {
-  return (
-    <ul className="list list-movies">
-      {data?.map((movie) => (
-        <li key={movie.imdbID}>
-          <Movie data={movie} forWatched={forWatched} />
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-const Movie = ({ data, forWatched }) => {
-  return (
-    <div>
-      <img src={data.Poster} alt={`${data.Title} poster`} />
-      <div className="inner">
-        <h3>{data.Title}</h3>
-        {forWatched ? (
-          <div>
-            <p>
-              <span>⭐️</span>
-              <span>{data.imdbRating}</span>
-            </p>
-            <p>
-              <span>🌟</span>
-              <span>{data.userRating}</span>
-            </p>
-            <p>
-              <span>⏳</span>
-              <span>{data.runtime} min</span>
-            </p>
-          </div>
-        ) : (
-          <p>
-            <span>🗓</span>
-            <span>{data.Year}</span>
-          </p>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const WatchedSummary = ({ watched }) => {
-  const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
-  const avgUserRating = average(watched.map((movie) => movie.userRating));
-  const avgRuntime = average(watched.map((movie) => movie.runtime));
-
-  return (
-    <div className="summary">
-      <h2>Movies you watched</h2>
-      <div>
-        <p>
-          <span>#️⃣</span>
-          <span>{watched.length} movies</span>
-        </p>
-        <p>
-          <span>⭐️</span>
-          <span>{avgImdbRating}</span>
-        </p>
-        <p>
-          <span>🌟</span>
-          <span>{avgUserRating}</span>
-        </p>
-        <p>
-          <span>⏳</span>
-          <span>{avgRuntime} min</span>
-        </p>
-      </div>
-    </div>
-  );
-};
-
-const MoviesDetails = () => {
-  return (
-    <div className="details">
-      <header>
-        <button className="btn-back">←</button>
-
-        <img
-          src="https://m.media-amazon.com/images/M/MV5BMTQ4ZDY3NzQtNTJjYy00Zjc4LWIxYTQtZDZjZjk0ODU2MWRhL2ltYWdlXkEyXkFqcGdeQXVyNzIyODY5MDk@._V1_SX300.jpg"
-          alt="Poster of [object Object] movie"
-        />
-        <div className="details-overview">
-          <h2>Dans tes bras</h2>
-          <p>01 Jul 2009 • 83 min</p>
-          <p>Drama</p>
-          <p>
-            <span>⭐️</span>5.7 IMDb rating
-          </p>
-        </div>
-      </header>
-      <section>
-        <div></div>
-        <p>
-          <em>
-            Adopted when he was young, Louis has a fight with his parents and
-            looks for his birth mother. When the son she gave up suddenly
-            appears, Solange denies him and Louis falls into despair. The film
-            follows an adopted adolescent boy s...
-          </em>
-        </p>
-        <p>Starring Michèle Laroque, Martin Loizillon, Lola Naymark</p>
-        <p>Directed by Hubert Gillet</p>
-      </section>
-    </div>
-  );
-};
-
-const Loader = () => {
-  return <div className="loader">Loading...</div>;
-};
-
-const ErrorMessage = ({ message }) => {
-  return <div className="error">⛔ {message}</div>;
-};
-
 const convertMoviesFormat = (movies) => {
   return movies.map((movie) => ({
     imdbID: movie.id.toString(),
@@ -225,6 +69,7 @@ const convertMoviesFormat = (movies) => {
 };
 
 const KEY = '4ee0e3464f7ff5d7c291f4f2d71046d0';
+
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
