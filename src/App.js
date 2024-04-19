@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const tempMovieData = [
   {
@@ -60,16 +60,13 @@ const Logo = () => {
   );
 };
 
-const SearchField = () => {
-  const [query, setQuery] = useState('');
-
+const SearchField = ({ searchHandler }) => {
   return (
     <input
       className="search"
       type="text"
       placeholder="Search movies..."
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
+      onChange={(e) => searchHandler(e.target.value)}
     />
   );
 };
@@ -100,7 +97,7 @@ const Box = ({ children }) => {
 
 const MoviesList = ({ data, forWatched }) => {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {data?.map((movie) => (
         <li key={movie.imdbID}>
           <Movie data={movie} forWatched={forWatched} />
@@ -172,20 +169,135 @@ const WatchedSummary = ({ watched }) => {
   );
 };
 
+const MoviesDetails = () => {
+  return (
+    <div className="details">
+      <header>
+        <button className="btn-back">←</button>
+
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMTQ4ZDY3NzQtNTJjYy00Zjc4LWIxYTQtZDZjZjk0ODU2MWRhL2ltYWdlXkEyXkFqcGdeQXVyNzIyODY5MDk@._V1_SX300.jpg"
+          alt="Poster of [object Object] movie"
+        />
+        <div className="details-overview">
+          <h2>Dans tes bras</h2>
+          <p>01 Jul 2009 • 83 min</p>
+          <p>Drama</p>
+          <p>
+            <span>⭐️</span>5.7 IMDb rating
+          </p>
+        </div>
+      </header>
+      <section>
+        <div></div>
+        <p>
+          <em>
+            Adopted when he was young, Louis has a fight with his parents and
+            looks for his birth mother. When the son she gave up suddenly
+            appears, Solange denies him and Louis falls into despair. The film
+            follows an adopted adolescent boy s...
+          </em>
+        </p>
+        <p>Starring Michèle Laroque, Martin Loizillon, Lola Naymark</p>
+        <p>Directed by Hubert Gillet</p>
+      </section>
+    </div>
+  );
+};
+
+const Loader = () => {
+  return <div className="loader">Loading...</div>;
+};
+
+const ErrorMessage = ({ message }) => {
+  return <div className="error">⛔ {message}</div>;
+};
+
+const convertMoviesFormat = (movies) => {
+  return movies.map((movie) => ({
+    imdbID: movie.id.toString(),
+    Title: movie.title,
+    Year: movie.release_date.split('-')[0],
+    Poster: movie.poster_path
+      ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
+      : 'N/A',
+  }));
+};
+
+const KEY = '4ee0e3464f7ff5d7c291f4f2d71046d0';
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
+  const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleSetMovies = () => {};
+
+  const handleQuery = (query) => {
+    if (query.length < 3) {
+      setMovies([]);
+      setErrorMessage(false);
+      return;
+    }
+
+    setQuery(query);
+  };
+
+  const handleErrorMessage = (message) => {
+    setErrorMessage(!message.length ? 'Movie not found' : message);
+  };
+
+  useEffect(() => {
+    if (!query) return;
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        const res = await fetch(
+          `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=${KEY}`
+        );
+
+        if (!res.ok) throw new Error('Something went wrong');
+
+        const data = await res.json();
+
+        const { results } = data;
+
+        if (!results.length) throw new Error('');
+
+        const newArray = convertMoviesFormat(results);
+
+        setMovies(newArray);
+      } catch (error) {
+        console.log(error);
+        console.log(error.message);
+        handleErrorMessage(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [query]);
 
   return (
     <>
-      <Nav movies={movies} setMovies={setMovies}>
+      <Nav movies={movies}>
         <Logo />
-        <SearchField />
+        <SearchField searchHandler={handleQuery} />
       </Nav>
 
       <main className="main">
         <Box>
-          <MoviesList data={movies} />
+          {isLoading ? (
+            <Loader />
+          ) : errorMessage ? (
+            <ErrorMessage message={errorMessage} />
+          ) : (
+            <MoviesList data={movies} />
+          )}
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
