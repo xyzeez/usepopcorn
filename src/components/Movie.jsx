@@ -1,4 +1,4 @@
-const Movie = ({ data, forWatched, clickHandler }) => {
+const Movie = ({ data, forWatched, clickHandler, deleteHandler }) => {
   return (
     <div
       onClick={() => {
@@ -21,6 +21,12 @@ const Movie = ({ data, forWatched, clickHandler }) => {
               <span>⏳</span>
               <span>{data.runtime} min</span>
             </p>
+
+            <button
+              onClick={() => deleteHandler(data.imdbID)}
+              className="btn-delete">
+              X
+            </button>
           </div>
         ) : (
           <p>

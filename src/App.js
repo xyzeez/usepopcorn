@@ -78,6 +78,12 @@ export default function App() {
     else setSelectedMovie(movieId);
   };
 
+  const handleDeleteWatched = (movieId) => {
+    setWatched((watched) =>
+      watched.filter((watched) => (watched.imdbID !== movieId ? watched : ''))
+    );
+  };
+
   const handleQuery = (query) => {
     if (query.length < 3) {
       setMovies([]);
@@ -152,7 +158,11 @@ export default function App() {
           ) : (
             <>
               <WatchedSummary watched={watched} />
-              <MoviesList data={watched} forWatched={true} />
+              <MoviesList
+                data={watched}
+                forWatched={true}
+                deleteHandler={handleDeleteWatched}
+              />
             </>
           )}
         </Box>

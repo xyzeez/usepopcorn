@@ -1,7 +1,7 @@
 // Components
 import Movie from './Movie';
 
-const MoviesList = ({ data, forWatched, clickHandler }) => {
+const MoviesList = ({ data, forWatched, clickHandler, deleteHandler }) => {
   return (
     <ul className="list list-movies">
       {data?.map((movie) => (
@@ -10,6 +10,7 @@ const MoviesList = ({ data, forWatched, clickHandler }) => {
             data={movie}
             forWatched={forWatched}
             clickHandler={clickHandler}
+            deleteHandler={deleteHandler}
           />
         </li>
       ))}
