@@ -9,6 +9,10 @@ import MoviesList from './components/MovieList';
 import WatchedSummary from './components/WatchedSummary';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
+import MoviesDetails from './components/MovieDetails';
+
+// variables
+import { API_KEY } from './configs';
 
 const tempMovieData = [
   {
@@ -57,23 +61,11 @@ const tempWatchedData = [
   },
 ];
 
-const convertMoviesFormat = (movies) => {
-  return movies.map((movie) => ({
-    imdbID: movie.id.toString(),
-    Title: movie.title,
-    Year: movie.release_date.split('-')[0],
-    Poster: movie.poster_path
-      ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
-      : 'N/A',
-  }));
-};
-
-const KEY = '4ee0e3464f7ff5d7c291f4f2d71046d0';
-
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
   const [query, setQuery] = useState('');
+  const [selectedMovie, setSelectedMovie] = useState('tt3896198');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -101,20 +93,18 @@ export default function App() {
         setIsLoading(true);
 
         const res = await fetch(
-          `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=${KEY}`
+          `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
         );
 
         if (!res.ok) throw new Error('Something went wrong');
 
         const data = await res.json();
 
-        const { results } = data;
+        if (data.Response === 'False') throw new Error('');
 
-        if (!results.length) throw new Error('');
+        const { Search } = data;
 
-        const newArray = convertMoviesFormat(results);
-
-        setMovies(newArray);
+        setMovies(Search);
       } catch (error) {
         console.log(error);
         console.log(error.message);
@@ -145,8 +135,14 @@ export default function App() {
           )}
         </Box>
         <Box>
-          <WatchedSummary watched={watched} />
-          <MoviesList data={watched} forWatched={true} />
+          {selectedMovie ? (
+            <MoviesDetails movieId={selectedMovie} />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <MoviesList data={watched} forWatched={true} />
+            </>
+          )}
         </Box>
       </main>
     </>
