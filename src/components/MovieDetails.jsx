@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 // Components
 import Loader from './Loader';
 import ErrorMessage from './ErrorMessage';
+import StarRating from './StarRating';
 
 // variables
 import { API_KEY } from '../configs';
@@ -74,7 +75,7 @@ const MoviesDetails = ({ movieId }) => {
             </div>
           </header>
           <section>
-            <div></div>
+            <StarRating />
             <p>
               <em>{details.Plot}</em>
             </p>
