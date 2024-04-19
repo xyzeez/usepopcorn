@@ -8,10 +8,51 @@ import StarRating from './StarRating';
 // variables
 import { API_KEY } from '../configs';
 
-const MoviesDetails = ({ movieId, buttonHandler }) => {
+// Helpers
+const isAdded = (array, id) => {
+  return array.map((item) => item.imdbID).includes(id);
+};
+
+const getRating = (array, id) => {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i].imdbID === id) {
+      return array[i].userRating;
+    }
+  }
+  return false;
+};
+
+const MoviesDetails = ({
+  movieId,
+  buttonHandler,
+  watchedList,
+  setWatchedHandler,
+}) => {
   const [details, setDetails] = useState('');
+  const [userRating, setUserRating] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const added = isAdded(watchedList, movieId);
+
+  const watchedRating = getRating(watchedList, movieId);
+
+  const handleAddToList = () => {
+    if (added) return;
+
+    const movieData = {
+      imdbID: details.imdbID,
+      Title: details.Title,
+      Year: details.Year,
+      Poster: details.Poster,
+      runtime: parseInt(details.Runtime.match(/\d+/)[0]),
+      imdbRating: details.imdbRating,
+      userRating: userRating,
+    };
+
+    setWatchedHandler(movieData);
+    setUserRating(0);
+  };
 
   const handleErrorMessage = (message) => {
     setErrorMessage(!message.length ? 'Movie not found' : message);
@@ -57,7 +98,7 @@ const MoviesDetails = ({ movieId, buttonHandler }) => {
         <>
           <header>
             <button className="btn-back" onClick={buttonHandler}>
-              ←
+              <span>←</span>
             </button>
 
             <img
@@ -77,7 +118,27 @@ const MoviesDetails = ({ movieId, buttonHandler }) => {
             </div>
           </header>
           <section>
-            <StarRating />
+            <div className="rating">
+              {added ? (
+                `You rated this movie 🌟 ${watchedRating}`
+              ) : (
+                <>
+                  <StarRating
+                    rating={userRating}
+                    ratingHandler={setUserRating}
+                    addStatus={added}
+                  />
+
+                  {userRating > 0
+                    ? !added && (
+                        <button onClick={handleAddToList} className="btn-add">
+                          + Add to List
+                        </button>
+                      )
+                    : ''}
+                </>
+              )}
+            </div>
             <p>
               <em>{details.Plot}</em>
             </p>

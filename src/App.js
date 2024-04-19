@@ -69,6 +69,10 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const handleSetWatched = (newMovie) => {
+    setWatched((watched) => [...watched, newMovie]);
+  };
+
   const handleSelectedMovie = (movieId) => {
     if (!movieId || movieId === selectedMovie) setSelectedMovie('');
     else setSelectedMovie(movieId);
@@ -142,6 +146,8 @@ export default function App() {
             <MoviesDetails
               movieId={selectedMovie}
               buttonHandler={() => handleSelectedMovie('')}
+              watchedList={watched}
+              setWatchedHandler={handleSetWatched}
             />
           ) : (
             <>

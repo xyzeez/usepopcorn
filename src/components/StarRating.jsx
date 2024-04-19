@@ -56,19 +56,18 @@ const Star = ({ fill, index, handleClicked, handleHovered }) => {
   );
 };
 
-const StarRating = () => {
+const StarRating = ({ rating, ratingHandler }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [clickedIndex, setClickedIndex] = useState(0);
 
   return (
-    <div style={containerStyle} className="rating">
+    <div style={containerStyle}>
       <div style={starContainerStyle}>
         {Array.from({ length: 10 }, (_, i) => (
           <Star
             key={i}
-            fill={hoveredIndex ? hoveredIndex > i : clickedIndex > i}
+            fill={hoveredIndex ? hoveredIndex > i : rating > i}
             index={++i}
-            handleClicked={setClickedIndex}
+            handleClicked={ratingHandler}
             handleHovered={setHoveredIndex}
           />
         ))}
