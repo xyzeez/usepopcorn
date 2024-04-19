@@ -8,7 +8,7 @@ import StarRating from './StarRating';
 // variables
 import { API_KEY } from '../configs';
 
-const MoviesDetails = ({ movieId }) => {
+const MoviesDetails = ({ movieId, buttonHandler }) => {
   const [details, setDetails] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -56,7 +56,9 @@ const MoviesDetails = ({ movieId }) => {
       ) : (
         <>
           <header>
-            <button className="btn-back">←</button>
+            <button className="btn-back" onClick={buttonHandler}>
+              ←
+            </button>
 
             <img
               src={details.Poster}

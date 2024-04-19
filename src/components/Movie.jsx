@@ -1,6 +1,8 @@
-const Movie = ({ data, forWatched }) => {
+const Movie = ({ data, forWatched, clickHandler }) => {
+
+
   return (
-    <div>
+    <div onClick={() => clickHandler(data.imdbID)}>
       <img src={data.Poster} alt={`${data.Title} poster`} />
       <div className="inner">
         <h3>{data.Title}</h3>

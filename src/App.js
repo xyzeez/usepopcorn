@@ -65,11 +65,14 @@ export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
   const [query, setQuery] = useState('');
-  const [selectedMovie, setSelectedMovie] = useState('tt3896198');
+  const [selectedMovie, setSelectedMovie] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSetMovies = () => {};
+  const handleSelectedMovie = (movieId) => {
+    if (!movieId || movieId === selectedMovie) setSelectedMovie('');
+    else setSelectedMovie(movieId);
+  };
 
   const handleQuery = (query) => {
     if (query.length < 3) {
@@ -131,12 +134,15 @@ export default function App() {
           ) : errorMessage ? (
             <ErrorMessage message={errorMessage} />
           ) : (
-            <MoviesList data={movies} />
+            <MoviesList data={movies} clickHandler={handleSelectedMovie} />
           )}
         </Box>
         <Box>
           {selectedMovie ? (
-            <MoviesDetails movieId={selectedMovie} />
+            <MoviesDetails
+              movieId={selectedMovie}
+              buttonHandler={() => handleSelectedMovie('')}
+            />
           ) : (
             <>
               <WatchedSummary watched={watched} />
