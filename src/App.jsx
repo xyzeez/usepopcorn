@@ -101,12 +101,15 @@ export default function App() {
   useEffect(() => {
     if (!query) return;
 
+    const controller = new AbortController();
+
     const fetchData = async () => {
       try {
         setIsLoading(true);
 
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
+          `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
+          { signal: controller.signal }
         );
 
         console.log(res);
@@ -123,15 +126,16 @@ export default function App() {
       } catch (error) {
         console.log(error);
         console.log(error.message);
-        handleErrorMessage(error.message);
+        if (error.name !== 'AbortError') handleErrorMessage(error.message);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [query]);
 
+    return () => controller.abort();
+  }, [query]);
   return (
     <>
       <Nav movies={movies}>
