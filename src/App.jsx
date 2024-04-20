@@ -101,6 +101,8 @@ export default function App() {
   useEffect(() => {
     if (!query) return;
 
+    handleSelectedMovie('');
+
     const controller = new AbortController();
 
     const fetchData = async () => {
