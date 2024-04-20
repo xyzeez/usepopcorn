@@ -109,6 +109,8 @@ export default function App() {
           `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
         );
 
+        console.log(res);
+
         if (!res.ok) throw new Error('Something went wrong');
 
         const data = await res.json();
