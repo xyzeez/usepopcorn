@@ -136,6 +136,7 @@ export default function App() {
 
     return () => controller.abort();
   }, [query]);
+
   return (
     <>
       <Nav movies={movies}>
@@ -157,7 +158,7 @@ export default function App() {
           {selectedMovie ? (
             <MoviesDetails
               movieId={selectedMovie}
-              buttonHandler={() => handleSelectedMovie('')}
+              buttonHandler={handleSelectedMovie}
               watchedList={watched}
               setWatchedHandler={handleSetWatched}
             />

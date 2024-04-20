@@ -54,6 +54,18 @@ const MoviesDetails = ({
     setUserRating(0);
   };
 
+  useEffect(() => {
+    const callback = (e) => {
+      if (e.code === 'Escape') buttonHandler('');
+    };
+
+    document.addEventListener('keydown', callback);
+
+    return () => {
+      document.removeEventListener('keydown', callback);
+    };
+  }, [buttonHandler]);
+
   const handleErrorMessage = (message) => {
     setErrorMessage(!message.length ? 'Movie not found' : message);
   };
@@ -105,7 +117,7 @@ const MoviesDetails = ({
       ) : (
         <>
           <header>
-            <button className="btn-back" onClick={buttonHandler}>
+            <button className="btn-back" onClick={() => buttonHandler('')}>
               <span>←</span>
             </button>
 
