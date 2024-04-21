@@ -38,6 +38,8 @@ export default function App() {
   };
 
   const handleQuery = (query) => {
+    handleSelectedMovie('');
+
     if (query.length < 3) {
       setMovies([]);
       setErrorMessage(false);
@@ -53,8 +55,6 @@ export default function App() {
 
   useEffect(() => {
     if (!query) return;
-
-    handleSelectedMovie('');
 
     const controller = new AbortController();
 
