@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 
+// Hooks
+import useLocalStorage from './hooks/useLocalStorage';
+
 // Components
 import Nav from './components/Nav';
 import Logo from './components/Logo';
@@ -14,18 +17,13 @@ import MoviesDetails from './components/MovieDetails';
 // Variables
 import { API_KEY, LOCAL_STORAGE_KEY } from './configs';
 
-// Helpers
-import { getLocalData, setLocalData } from './helpers';
-
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState(getLocalData(LOCAL_STORAGE_KEY));
+  const [watched, setWatched] = useLocalStorage([], LOCAL_STORAGE_KEY);
   const [query, setQuery] = useState('');
   const [selectedMovie, setSelectedMovie] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => setLocalData(LOCAL_STORAGE_KEY, watched), [watched]);
 
   const handleSetWatched = (newMovie) => {
     setWatched((watched) => [...watched, newMovie]);
