@@ -26,11 +26,6 @@ export default function App() {
     setWatched((watched) => [...watched, newMovie]);
   };
 
-  const handleSelectedMovie = (movieId) => {
-    if (!movieId || movieId === selectedMovie) setSelectedMovie('');
-    else setSelectedMovie(movieId);
-  };
-
   const handleDeleteWatched = (movieId) => {
     setWatched((watched) =>
       watched.filter((watched) => (watched.imdbID !== movieId ? watched : ''))
@@ -47,6 +42,11 @@ export default function App() {
     }
 
     setQuery(query);
+  };
+
+  const handleSelectedMovie = (movieId) => {
+    if (!movieId || movieId === selectedMovie) setSelectedMovie('');
+    else setSelectedMovie(movieId);
   };
 
   const handleErrorMessage = (message) => {
