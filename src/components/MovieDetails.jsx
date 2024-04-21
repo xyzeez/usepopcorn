@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 
+// Hooks
+import useKey from '../hooks/useKey';
+
 // Components
 import Loader from './Loader';
 import ErrorMessage from './ErrorMessage';
@@ -43,17 +46,7 @@ const MoviesDetails = ({
     setUserRating(0);
   };
 
-  useEffect(() => {
-    const callback = (e) => {
-      if (e.code === 'Escape') buttonHandler('');
-    };
-
-    document.addEventListener('keydown', callback);
-
-    return () => {
-      document.removeEventListener('keydown', callback);
-    };
-  }, [buttonHandler]);
+  useKey('Escape', () => buttonHandler(''));
 
   const handleErrorMessage = (message) => {
     setErrorMessage(!message.length ? 'Movie not found' : message);

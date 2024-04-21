@@ -1,24 +1,21 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+
+// Hooks
+import useKey from '../hooks/useKey';
 
 const SearchField = ({ searchHandler }) => {
   const inputDOM = useRef(null);
 
-  useEffect(() => {
-    const callback = (e) => {
-      if (e.code !== 'Enter') return;
+  const focusSearchField = () => {
+    if (inputDOM.current === document.activeElement) return;
 
-      if (inputDOM.current === document.activeElement) return;
+    inputDOM.current.focus();
 
-      inputDOM.current.focus();
+    inputDOM.current.value = '';
+    searchHandler('');
+  };
 
-      inputDOM.current.value = '';
-      searchHandler('');
-    };
-
-    document.addEventListener('keydown', callback);
-
-    return () => document.removeEventListener('keydown', callback);
-  }, [searchHandler]);
+  useKey('Enter', focusSearchField);
 
   return (
     <input
