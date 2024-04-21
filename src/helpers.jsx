@@ -19,5 +19,6 @@ export const getRating = (array, id) => {
   return false;
 };
 
-export const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0).toFixed(2);
+export const average = (arr) => {
+  return arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0).toFixed(2);
+};
