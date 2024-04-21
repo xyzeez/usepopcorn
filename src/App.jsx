@@ -112,6 +112,7 @@ export default function App() {
         <Box>
           {selectedMovie ? (
             <MoviesDetails
+              key={selectedMovie}
               movieId={selectedMovie}
               buttonHandler={handleSelectedMovie}
               watchedList={watched}
