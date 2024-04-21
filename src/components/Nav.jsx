@@ -3,7 +3,11 @@ const Nav = ({ movies, children }) => {
     <nav className="nav-bar">
       {children}
       <p className="num-results">
-        Found <strong>{movies.length}</strong> results
+        {movies.length > 0 && (
+          <span>
+            Found <strong>{movies.length}</strong> results
+          </span>
+        )}
       </p>
     </nav>
   );
