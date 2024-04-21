@@ -22,3 +22,24 @@ export const getRating = (array, id) => {
 export const average = (arr) => {
   return arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0).toFixed(2);
 };
+
+export const fetchData = async (url, options = {}) => {
+  try {
+    const res = await fetch(url, options);
+
+    if (!res.ok) throw new Error('Something went wrong');
+
+    const data = await res.json();
+
+    console.log(data.Response === 'False');
+
+    if (data.Response === 'False') throw new Error('');
+
+    if (options.signal && options.signal.aborted) return;
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

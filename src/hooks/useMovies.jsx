@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 // Variables
 import { API_KEY } from '../configs';
 
+// Helpers
+import { fetchData } from '../helpers';
+
 const useMovies = (query) => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,34 +26,24 @@ const useMovies = (query) => {
 
     const controller = new AbortController();
 
-    const fetchData = async () => {
+    const searchMovies = async () => {
       try {
         setIsLoading(true);
 
-        const res = await fetch(
+        const { Search } = await fetchData(
           `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`,
           { signal: controller.signal }
         );
 
-        if (!res.ok) throw new Error('Something went wrong');
-
-        const data = await res.json();
-
-        if (data.Response === 'False') throw new Error('');
-
-        const { Search } = data;
-
         setMovies(Search);
       } catch (error) {
-        console.log(error);
-        console.log(error.message);
         if (error.name !== 'AbortError') handleErrorMessage(error.message);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
+    searchMovies();
 
     return () => controller.abort();
   }, [query]);

@@ -12,7 +12,7 @@ import StarRating from './StarRating';
 import { API_KEY } from '../configs';
 
 // Helpers
-import { isAdded, getRating } from '../helpers';
+import { isAdded, getRating, fetchData } from '../helpers';
 
 const MoviesDetails = ({
   movieId,
@@ -55,31 +55,25 @@ const MoviesDetails = ({
   useEffect(() => {
     if (!movieId) return;
 
-    const fetchData = async () => {
+    const fetchMovieDetails = async () => {
       try {
         setIsLoading(true);
 
-        const res = await fetch(
+        const data = await fetchData(
           `http://www.omdbapi.com/?i=${movieId}&apikey=${API_KEY}`
         );
-
-        if (!res.ok) throw new Error('Something went wrong!');
-
-        const data = await res.json();
 
         if (!data) throw new Error('');
 
         setDetails(data);
       } catch (error) {
-        console.log(error);
-        console.log(error.message);
         handleErrorMessage(error.message);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
+    fetchMovieDetails();
   }, [movieId]);
 
   useEffect(() => {
