@@ -9,18 +9,7 @@ import StarRating from './StarRating';
 import { API_KEY } from '../configs';
 
 // Helpers
-const isAdded = (array, id) => {
-  return array.map((item) => item.imdbID).includes(id);
-};
-
-const getRating = (array, id) => {
-  for (let i = 0; i < array.length; i++) {
-    if (array[i].imdbID === id) {
-      return array[i].userRating;
-    }
-  }
-  return false;
-};
+import { isAdded, getRating } from '../helpers';
 
 const MoviesDetails = ({
   movieId,
